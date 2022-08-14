@@ -2,28 +2,28 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
 )
 
-// srtDeleter deletes all .srt files from a directory and it's subdirectories
+// srtDeleter deletes all .srt files from a directory and it's subdirectories,
+// returns number of files deleted this way
 func srtDeleter(dir string) int {
-	files, err := ioutil.ReadDir(dir)
+	dirContent, err := os.ReadDir(dir)
 	if err != nil {
 		fmt.Println(err)
 	}
 
 	delFileCount := 0
-	for _, fileInfo := range files {
-		if fileInfo.IsDir() {
-			delFileCount += srtDeleter(dir + "/" + fileInfo.Name())
+	for _, file := range dirContent {
+		if file.IsDir() {
+			delFileCount += srtDeleter(dir + "/" + file.Name())
 		} else {
-			start := len(fileInfo.Name()) - 4
+			start := len(file.Name()) - 4
 
-			// fmt.Println(fileInfo.Name()[start:])
-			if fileInfo.Name()[start:] == ".srt" {
-				// fmt.Println(fileInfo.Name())
-				err := os.Remove(dir + "/" + fileInfo.Name())
+			// fmt.Println(file.Name()[start:])
+			if file.Name()[start:] == ".srt" {
+				// fmt.Println(file.Name())
+				err := os.Remove(dir + "/" + file.Name())
 				if err != nil {
 					fmt.Println(err)
 				}
