@@ -7,15 +7,16 @@ import (
 )
 
 // srtDeleter deletes all .srt files from a directory and it's subdirectories
-func srtDeleter(dir string) {
+func srtDeleter(dir string) int {
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		fmt.Println(err)
 	}
 
+	delFileCount := 0
 	for _, fileInfo := range files {
 		if fileInfo.IsDir() {
-			srtDeleter(dir + "/" + fileInfo.Name())
+			delFileCount += srtDeleter(dir + "/" + fileInfo.Name())
 		} else {
 			start := len(fileInfo.Name()) - 4
 
@@ -26,7 +27,9 @@ func srtDeleter(dir string) {
 				if err != nil {
 					fmt.Println(err)
 				}
+				delFileCount++
 			}
 		}
 	}
+	return delFileCount
 }
