@@ -11,6 +11,25 @@ type subtitles struct {
 	subFiles   []string
 }
 
+func findSubsFileAndGetSubtitles(dir string) []subtitles {
+	var result []subtitles
+
+	dirContent, err := os.ReadDir(dir)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	for _, file := range dirContent {
+		if !file.IsDir() {
+			continue
+		}
+		if strings.ToLower(file.Name()) == "subs" {
+			result = srtFetcher(dir + string(os.PathSeparator) + file.Name())
+		}
+	}
+	return result
+}
+
 // srtFetcher fetches the subtitles from a subs directory,
 // there are two cases:
 // 1) if there is a single video file, all subtitles should be in a directory called subs
@@ -70,11 +89,22 @@ func getSubFiles(dir string) []string {
 
 func srtFetcherTest() {
 	// flagsOrDir := os.Args[1:]
-	// mySubs := getSubs(flagsOrDir[0])
+	// mySubs := getSubFiles(flagsOrDir[0])
 	// fmt.Println(mySubs)
 
+	// flagsOrDir := os.Args[1:]
+	// mySubs := srtFetcher(flagsOrDir[0])
+	// for _, sub := range mySubs {
+	// 	fmt.Println("---------------------------")
+	// 	fmt.Println("sub folder:", sub.folderName)
+	// 	fmt.Println("Subtitles:")
+	// 	for i, subFile := range sub.subFiles {
+	// 		fmt.Println(i, "=", subFile)
+	// 	}
+	// }
+
 	flagsOrDir := os.Args[1:]
-	mySubs := srtFetcher(flagsOrDir[0])
+	mySubs := findSubsFileAndGetSubtitles(flagsOrDir[0])
 	for _, sub := range mySubs {
 		fmt.Println("---------------------------")
 		fmt.Println("sub folder:", sub.folderName)
