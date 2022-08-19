@@ -21,7 +21,7 @@ func srtDeleter(dir string) int {
 			continue
 		}
 
-		err := os.Remove(dir + "/" + file.Name())
+		err := os.Remove(dir + string(os.PathSeparator) + file.Name())
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -41,7 +41,7 @@ func srtDeleterR(dir string) int {
 	delFileCount := 0
 	for _, file := range dirContent {
 		if file.IsDir() {
-			delFileCount += srtDeleterR(dir + "/" + file.Name())
+			delFileCount += srtDeleterR(dir + string(os.PathSeparator) + file.Name())
 			continue
 		}
 		isSubtitle := strings.HasSuffix(file.Name(), ".srt")
@@ -49,7 +49,7 @@ func srtDeleterR(dir string) int {
 			continue
 		}
 
-		err := os.Remove(dir + "/" + file.Name())
+		err := os.Remove(dir + string(os.PathSeparator) + file.Name())
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -62,6 +62,6 @@ func srtDeleterR(dir string) int {
 func test() {
 	flagsOrDir := os.Args[1:]
 	filesDeleted := srtDeleter(flagsOrDir[0])
-	remainigFiles := srtDeleterR(flagsOrDir[0])
-	fmt.Printf("%d files deleted + %d files in folders\n", filesDeleted, remainigFiles)
+	// remainigFiles := srtDeleterR(flagsOrDir[0])
+	fmt.Printf("%d files deleted\n", filesDeleted)
 }
