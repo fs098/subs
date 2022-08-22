@@ -4,17 +4,34 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 )
 
 func main() {
-	// fetches .srt files by default
 	deleteFlag := flag.Bool("d", false, "Delete .srt files in directory")
 	deleteRFlag := flag.Bool("dd", false, "Delete .srt files in directory and subdirectories")
 	// selectIndex allows to manually select the index of the wanted .srt file. Starts at 1 instead of 0
-	// selectIndex := flag.Bool("i", false, "Fetches subtitles at given index")
+	selectIndex := flag.Bool("i", false, "Fetches subtitles at given index")
 
 	flag.Parse()
-	directories := flag.Args()
+	myArgs := flag.Args()
+
+	// myIndex is the index given to strCopy function, defaults to 0 but can be changed
+	// with selectIndex flag. Ex: subs -i 2
+	myIndex := 0
+
+	var directories []string
+	if !(*selectIndex) {
+		directories = myArgs
+	} else {
+		intGiven, err := strconv.Atoi(myArgs[0])
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		myIndex = intGiven - 1
+		directories = myArgs[1:]
+	}
 
 	var myDirs []string
 	if len(directories) == 0 {
@@ -41,14 +58,14 @@ func main() {
 	}
 
 	for _, dir := range myDirs {
-		applyFlags(dir, *deleteFlag, *deleteRFlag)
+		applyFlags(dir, myIndex, *deleteFlag, *deleteRFlag)
 	}
 }
 
-func applyFlags(dir string, delete bool, deleteR bool) {
+func applyFlags(dir string, index int, delete bool, deleteR bool) {
 	defaultB := !delete && !deleteR
 	if defaultB {
-		srtCopy(dir, 0)
+		srtCopy(dir, index)
 	} else if delete {
 		srtDeleter(dir)
 	} else if deleteR {
@@ -58,6 +75,4 @@ func applyFlags(dir string, delete bool, deleteR bool) {
 
 // TO DO:
 // 1) remove overused os.ReadDir function
-// 2) select SDH subtitle
-// 3) change copy function not to rely on bash
-// 4) teste srtDeleter, after "/" change
+// 2) change copy function not to rely on bash
