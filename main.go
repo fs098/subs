@@ -72,7 +72,7 @@ func main() {
 	}
 
 	for _, dir := range myDirs {
-		applyFlags(dir, myIndex, *deleteFlag, *deleteRFlag)
+		applyFlagsHandler(dir, myIndex, *deleteFlag, *deleteRFlag)
 	}
 }
 
