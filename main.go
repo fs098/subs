@@ -10,6 +10,8 @@ func main() {
 	// fetches .srt files by default
 	deleteFlag := flag.Bool("d", false, "Delete .srt files in directory")
 	deleteRFlag := flag.Bool("dd", false, "Delete .srt files in directory and subdirectories")
+	// selectIndex allows to manually select the index of the wanted .srt file. Starts at 1 instead of 0
+	// selectIndex := flag.Bool("i", false, "Fetches subtitles at given index")
 
 	flag.Parse()
 	directories := flag.Args()
@@ -30,7 +32,9 @@ func main() {
 			dir, err := os.Stat(entry)
 			if err != nil {
 				fmt.Println(err)
-			} else if dir.IsDir() {
+				return
+			}
+			if dir.IsDir() {
 				myDirs = append(myDirs, entry)
 			}
 		}
@@ -44,7 +48,7 @@ func main() {
 func applyFlags(dir string, delete bool, deleteR bool) {
 	defaultB := !delete && !deleteR
 	if defaultB {
-		srtCopy(dir)
+		srtCopy(dir, 0)
 	} else if delete {
 		srtDeleter(dir)
 	} else if deleteR {

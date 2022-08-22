@@ -14,7 +14,7 @@ type videoInfo struct {
 
 }
 
-func srtCopy(dir string) {
+func srtCopy(dir string, index int) {
 	var videoInfos []videoInfo
 	getVideoInfo(dir, &videoInfos)
 	subs := findSubsFileAndGetSubtitles(dir)
@@ -24,17 +24,29 @@ func srtCopy(dir string) {
 		return
 	}
 
+	// in case the index given isn't valid
+	maxIndex := len(subs[0].subFiles) - 1
+	if index > maxIndex {
+		index = maxIndex
+		fmt.Println("Invalid index provided. Index is now", index)
+	} else if index < 0 {
+		index = 0
+		fmt.Println("Invalid index provided. Index is now", index)
+	}
+
 	var counter int
+	// Single video file
 	if len(subs) == 1 {
-		copy(videoInfos[0].subtitleName, subs[0].subFiles[0])
+		copy(videoInfos[0].subtitleName, subs[0].subFiles[index])
 		counter++
 		fmt.Println("Copied", counter, "files!")
 		return
 	}
 
+	// Multiple videos
 	for i, info := range videoInfos {
 		if info.name == subs[i].folderName {
-			copy(info.subtitleName, subs[i].subFiles[0])
+			copy(info.subtitleName, subs[i].subFiles[index])
 			counter++
 		}
 	}
