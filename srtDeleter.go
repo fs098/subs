@@ -7,8 +7,8 @@ import (
 )
 
 // srtDeleter deletes all .srt files from a directory,
-// returns number of files deleted this way
-func srtDeleter(dir string) int {
+// outputs number of files deleted this way
+func srtDeleter(dir string) {
 	dirContent, err := os.ReadDir(dir)
 	if err != nil {
 		fmt.Println(err)
@@ -27,12 +27,18 @@ func srtDeleter(dir string) int {
 		}
 		delFileCount++
 	}
-	return delFileCount
+	fmt.Println("Deleted", delFileCount, "files!")
 }
 
-// srtDeleterR deletes all .srt files from a directory and it's subdirectories,
+// srtDeleterR calls DeleterR function and outputs the number of files it deleted
+func srtDeleterR(dir string) {
+	delFileCount := DeleterR(dir)
+	fmt.Println("Deleted", delFileCount, "files!")
+}
+
+// DeleterR deletes all .srt files from a directory and it's subdirectories,
 // returns number of files deleted this way
-func srtDeleterR(dir string) int {
+func DeleterR(dir string) int {
 	dirContent, err := os.ReadDir(dir)
 	if err != nil {
 		fmt.Println(err)
@@ -41,7 +47,7 @@ func srtDeleterR(dir string) int {
 	delFileCount := 0
 	for _, file := range dirContent {
 		if file.IsDir() {
-			delFileCount += srtDeleterR(dir + string(os.PathSeparator) + file.Name())
+			delFileCount += DeleterR(dir + string(os.PathSeparator) + file.Name())
 			continue
 		}
 		isSubtitle := strings.HasSuffix(file.Name(), ".srt")
