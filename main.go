@@ -7,6 +7,10 @@ import (
 	"strconv"
 )
 
+// main defines the flags that can be used by the program,
+// gets the index to be used by srtCopy function, the
+// directory or directories to be used and checks if they are valid.
+// finally, main calls applyFlags function to each directory.
 func main() {
 	deleteFlag := flag.Bool("d", false, "Delete .srt files in directory")
 	deleteRFlag := flag.Bool("dd", false, "Delete .srt files in directory and subdirectories")
@@ -14,13 +18,23 @@ func main() {
 	selectIndex := flag.Bool("i", false, "Fetches subtitles at given index")
 
 	flag.Parse()
+	// myArgs should consist of directories or an int and directories
 	myArgs := flag.Args()
+
+	if invalidFlags(*deleteFlag, *deleteRFlag, *selectIndex) {
+		fmt.Println("Invalid flags: too many flags given")
+		return
+	}
 
 	// myIndex is the index given to strCopy function, defaults to 0 but can be changed
 	// with selectIndex flag. Ex: subs -i 2
 	myIndex := 0
 
+	// directories is the list of directories given as arguments
 	var directories []string
+
+	// if an index was specified with the selectIndex flag, then it should be the
+	// first item in myArgs variable
 	if !(*selectIndex) {
 		directories = myArgs
 	} else {
@@ -35,7 +49,7 @@ func main() {
 
 	var myDirs []string
 	if len(directories) == 0 {
-		// if there are no args in directories then use the current path
+		// if directories is empty then use the current dir
 		currentDir, err := os.Getwd()
 		if err != nil {
 			fmt.Println(err)
@@ -62,6 +76,23 @@ func main() {
 	}
 }
 
+// invalidFlags checks if more than one flag were given as arguments,
+// which is not valid
+func invalidFlags(delete bool, deleteR bool, index bool) bool {
+	flagCount := 0
+	if delete {
+		flagCount++
+	}
+	if deleteR {
+		flagCount++
+	}
+	if index {
+		flagCount++
+	}
+	return flagCount > 1
+}
+
+// applyFlags checks which flag was given and calls the correct function
 func applyFlags(dir string, index int, delete bool, deleteR bool) {
 	defaultB := !delete && !deleteR
 	if defaultB {
@@ -74,5 +105,4 @@ func applyFlags(dir string, index int, delete bool, deleteR bool) {
 }
 
 // TO DO:
-// 1) remove overused os.ReadDir function
-// 2) change copy function not to rely on bash
+// 1) change copy function not to rely on bash
