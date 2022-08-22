@@ -19,6 +19,11 @@ func srtCopy(dir string) {
 	getVideoInfo(dir, &videoInfos)
 	subs := findSubsFileAndGetSubtitles(dir)
 
+	if len(subs) == 0 {
+		fmt.Println("No .srt files found")
+		return
+	}
+
 	var counter int
 	if len(subs) == 1 {
 		copy(videoInfos[0].subtitleName, subs[0].subFiles[0])
@@ -79,26 +84,4 @@ func getVideoName(name string) string {
 		vidTermination = ".mp4"
 	}
 	return strings.Replace(name, vidTermination, "", 1)
-}
-
-func strCopyTest() {
-	// test1 := getVideoName("test1.mkv")
-	// test2 := getVideoName("test2.mp4")
-	// fmt.Println(test1, test2)
-
-	// flagsOrDir := os.Args[1:]
-	// myVids := []videoInfo{}
-	// getVideoInfo(flagsOrDir[0], &myVids)
-	// for _, vid := range myVids {
-	// 	fmt.Println("---------------------------")
-	// 	fmt.Println("name:", vid.name)
-	// 	fmt.Println("path:", vid.path)
-	// 	fmt.Println("sub name:", vid.subtitleName)
-	// }
-
-	flagsOrDir := os.Args[1:]
-	srtCopy(flagsOrDir[0])
-
-	// filesDeleted := srtDeleter(flagsOrDir[0])
-	// fmt.Println(filesDeleted, "files deleted!")
 }

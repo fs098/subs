@@ -86,31 +86,3 @@ func getSubFiles(dir string) []string {
 
 	return result
 }
-
-func srtFetcherTest() {
-	// flagsOrDir := os.Args[1:]
-	// mySubs := getSubFiles(flagsOrDir[0])
-	// fmt.Println(mySubs)
-
-	// flagsOrDir := os.Args[1:]
-	// mySubs := srtFetcher(flagsOrDir[0])
-	// for _, sub := range mySubs {
-	// 	fmt.Println("---------------------------")
-	// 	fmt.Println("sub folder:", sub.folderName)
-	// 	fmt.Println("Subtitles:")
-	// 	for i, subFile := range sub.subFiles {
-	// 		fmt.Println(i, "=", subFile)
-	// 	}
-	// }
-
-	flagsOrDir := os.Args[1:]
-	mySubs := findSubsFileAndGetSubtitles(flagsOrDir[0])
-	for _, sub := range mySubs {
-		fmt.Println("---------------------------")
-		fmt.Println("sub folder:", sub.folderName)
-		fmt.Println("Subtitles:")
-		for i, subFile := range sub.subFiles {
-			fmt.Println(i, "=", subFile)
-		}
-	}
-}
