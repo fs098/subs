@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 )
 
@@ -19,10 +20,10 @@ func srtCopy(dir string, index int) {
 	maxIndex := len(subs[0].subFiles) - 1
 	if index > maxIndex {
 		index = maxIndex
-		fmt.Println("Invalid index provided. Index is now", index)
+		fmt.Println("Invalid index provided. Index is now", index+1)
 	} else if index < 0 {
 		index = 0
-		fmt.Println("Invalid index provided. Index is now", index)
+		fmt.Println("Invalid index provided. Index is now", index+1)
 	}
 
 	var counter int
@@ -47,4 +48,11 @@ func srtCopy(dir string, index int) {
 func copy(destFile string, srcFile string) {
 	cmd := exec.Command("cp", srcFile, destFile)
 	cmd.Run()
+}
+
+func getPath(dir string, name string) string {
+	if dir[len(dir)-1] == '/' {
+		return dir + name
+	}
+	return dir + string(os.PathSeparator) + name
 }

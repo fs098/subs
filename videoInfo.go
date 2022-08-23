@@ -19,12 +19,12 @@ func getVideoInfo(dir string, infos *[]videoInfo) {
 
 	for _, file := range dirContent {
 		if file.IsDir() {
-			getVideoInfo(dir+string(os.PathSeparator)+file.Name(), infos)
+			getVideoInfo(getPath(dir, file.Name()), infos)
 		}
 		if isVideo(file.Name()) {
 			newInfo := videoInfo{
 				name:         getVideoName(file.Name()),
-				subtitleName: dir + string(os.PathSeparator) + getVideoName(file.Name()) + ".srt",
+				subtitleName: getPath(dir, getVideoName(file.Name())) + ".srt",
 			}
 			*infos = append(*infos, newInfo)
 		}

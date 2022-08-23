@@ -30,7 +30,7 @@ func applyFlagsHandler(dir string, index int, delete bool, deleteR bool) {
 		if !file.IsDir() {
 			continue
 		}
-		folderName := dir + string(os.PathSeparator) + file.Name()
+		folderName := getPath(dir, file.Name())
 		if hasSubs(folderName) {
 			foldersWithSubs = append(foldersWithSubs, folderName)
 		}
@@ -38,6 +38,7 @@ func applyFlagsHandler(dir string, index int, delete bool, deleteR bool) {
 
 	if len(foldersWithSubs) == 0 {
 		fmt.Println("No valid folders found in this directory")
+		return
 	}
 
 	myInts, err := getInput(foldersWithSubs)
@@ -92,10 +93,10 @@ func getInput(folders []string) ([]int, error) {
 
 // hasSubs checks if given directory has a folder with the name "Subs"
 func hasSubs(dir string) bool {
-	_, err := os.Stat(dir + string(os.PathSeparator) + "Subs")
+	_, err := os.Stat(getPath(dir, "Subs"))
 	if !os.IsNotExist(err) {
 		return true
 	}
-	_, err = os.Stat(dir + string(os.PathSeparator) + "subs")
+	_, err = os.Stat(getPath(dir, "subs"))
 	return !os.IsNotExist(err)
 }

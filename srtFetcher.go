@@ -24,7 +24,7 @@ func findSubsFileAndGetSubtitles(dir string) []subtitles {
 			continue
 		}
 		if strings.ToLower(file.Name()) == "subs" {
-			result = srtFetcher(dir + string(os.PathSeparator) + file.Name())
+			result = srtFetcher(getPath(dir, file.Name()))
 		}
 	}
 	return result
@@ -58,7 +58,7 @@ func srtFetcher(dir string) []subtitles {
 		if !file.IsDir() {
 			continue
 		}
-		fileSubs := getSubFiles(dir + string(os.PathSeparator) + file.Name())
+		fileSubs := getSubFiles(getPath(dir, file.Name()))
 		if len(fileSubs) > 0 {
 			fileSubtitles := subtitles{
 				folderName: file.Name(),
@@ -80,7 +80,7 @@ func getSubFiles(dir string) []string {
 
 	for _, file := range dirContent {
 		if strings.HasSuffix(file.Name(), ".srt") && strings.Contains(strings.ToLower(file.Name()), "english") {
-			result = append(result, dir+string(os.PathSeparator)+file.Name())
+			result = append(result, getPath(dir, file.Name()))
 		}
 	}
 
